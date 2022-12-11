@@ -1,0 +1,21 @@
+version: '3.5'
+
+services:
+
+  master:
+     image: mysql:8.0
+     environment:
+       MYSQL_ROOT_PASSWORD: "master"
+     volumes:
+       - "./config/master/my.cnf:/etc/mysql/my.cnf"
+       - "./data/master:/var/lib/mysql"
+       - "./init/master:/docker-entrypoint-initdb.d/:ro"
+
+  slave:
+     image: mysql:8.0
+     environment:
+       MYSQL_ROOT_PASSWORD: "slave"
+     volumes:
+       - "./config/slave/my.cnf:/etc/mysql/my.cnf"
+       - "./data/slave:/var/lib/mysql"
+       - "./init/slave:/docker-entrypoint-initdb.d/:ro"
