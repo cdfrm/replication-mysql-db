@@ -4,6 +4,7 @@ services:
 
   master:
      image: mysql:8.0
+     container_name: master
      environment:
        MYSQL_ROOT_PASSWORD: "master"
      volumes:
@@ -13,9 +14,18 @@ services:
 
   slave:
      image: mysql:8.0
+     container_name: slave
      environment:
        MYSQL_ROOT_PASSWORD: "slave"
+     depends_on:
+       - "master"
      volumes:
        - "./config/slave/my.cnf:/etc/mysql/my.cnf"
        - "./data/slave:/var/lib/mysql"
        - "./init/slave:/docker-entrypoint-initdb.d/:ro"
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOSTS: master,slave
